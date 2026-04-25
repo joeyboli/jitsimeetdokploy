@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  web:
+    image: jitsi/web:stable
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+      - "8443:443"
+    volumes:
+      - ${CONFIG}/web:/config:Z
+      - ${CONFIG}/web/crontabs:/var/spool/cron/crontabs:Z
+    environment:
+      - PUBLIC_URL=https://meet.example.com
+      - ENABLE_LETSENCRYPT=1
+      - LETSENCRYPT_DOMAIN=meet.example.com
+      - LETSENCRYPT_EMAIL=admin@example.com
+      - TZ=Africa/Accra
+
+  prosody:
+    image: jitsi/prosody:stable
+    restart: unless-stopped
+    volumes:
+      - ${CONFIG}/prosody/config:/config:Z
+    environment:
+      - TZ=Africa/Accra
+
+  jicofo:
+    image: jitsi/jicofo:stable
+    restart: unless-stopped
+    volumes:
+      - ${CONFIG}/jicofo:/config:Z
+    environment:
+      - TZ=Africa/Accra
+
+  jvb:
+    image: jitsi/jvb:stable
+    restart: unless-stopped
+    ports:
+      - "10000:10000/udp"
+    volumes:
+      - ${CONFIG}/jvb:/config:Z
+    environment:
+      - TZ=Africa/Accra
+      - DOCKER_HOST_ADDRESS=YOUR_SERVER_IP
