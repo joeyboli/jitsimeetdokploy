@@ -5,7 +5,7 @@ services:
     image: jitsi/web:stable
     restart: unless-stopped
     environment:
-      - PUBLIC_URL=https:/jmeet.streamafrica.cloud
+      - PUBLIC_URL=jmeet.streamafrica.cloud
       - TZ=Africa/Accra
       - ENABLE_LETSENCRYPT=0
       - XMPP_DOMAIN=meet.jitsi
