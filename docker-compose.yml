@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   web:
@@ -6,10 +6,11 @@ services:
     restart: unless-stopped
     environment:
       - PUBLIC_URL=https://meet.example.com
-      - ENABLE_LETSENCRYPT=0
       - TZ=Africa/Accra
-    volumes:
-      - ${CONFIG}/web:/config:Z
+      - ENABLE_LETSENCRYPT=0
+      - XMPP_DOMAIN=meet.jitsi
+      - XMPP_AUTH_DOMAIN=auth.meet.jitsi
+      - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.jitsi
     depends_on:
       - prosody
       - jicofo
@@ -20,16 +21,20 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Africa/Accra
-    volumes:
-      - ${CONFIG}/prosody/config:/config:Z
+      - XMPP_DOMAIN=meet.jitsi
+      - XMPP_AUTH_DOMAIN=auth.meet.jitsi
+      - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.jitsi
+      - JICOFO_COMPONENT_SECRET=your-jicofo-secret
+      - JVB_AUTH_PASSWORD=your-jvb-secret
+      - JICOFO_AUTH_PASSWORD=your-jicofo-secret
 
   jicofo:
     image: jitsi/jicofo:stable
     restart: unless-stopped
     environment:
       - TZ=Africa/Accra
-    volumes:
-      - ${CONFIG}/jicofo:/config:Z
+      - XMPP_DOMAIN=meet.jitsi
+      - JICOFO_AUTH_PASSWORD=your-jicofo-secret
 
   jvb:
     image: jitsi/jvb:stable
@@ -39,5 +44,4 @@ services:
     environment:
       - TZ=Africa/Accra
       - DOCKER_HOST_ADDRESS=YOUR_PUBLIC_IP
-    volumes:
-      - ${CONFIG}/jvb:/config:Z
+      - JVB_AUTH_PASSWORD=your-jvb-secret
